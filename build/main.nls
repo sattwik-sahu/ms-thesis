@@ -1,0 +1,6 @@
+
+\begin{thenomenclature} 
+\nomgroup{A}
+  \item [{ABC}]\begingroup Definition of ABC\nomeqref {0}\nompageref{ix}
+
+\end{thenomenclature}
