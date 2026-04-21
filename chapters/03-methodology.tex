@@ -1,1 +1,12 @@
 \chapter{Methodology}
+
+\section{Latent Encoders}
+
+To perform predictions and energy calculations in the latent space, physical quantities need to be encoded to corresponding latent spaces. To perform such an operation, a neural network known as an \textit{encoder} is used. Specifically, we use the latent encoders $f_\theta: \mathcal{I} \to \mathbb{R}^d$ and $f_\phi: \Sigma^\ast \to \mathbb{R}^d$ encode the visual observations $o_t \in \mathcal{I}$ at time $t \in \mathbb{R}$ and the task text description $\tau \in \Sigma^\ast$ to the $d$-dimensional latent space representations $\mathbf{e}_t$ and $\mathbf{z}$ respectively.
+
+\nomenclature{$\mathcal{I}$}{The set of all images}
+\nomenclature{$\Sigma^\ast$}{The list of all language symbols}
+\nomenclature{$o_t$}{Visual observation at time $t$}
+\nomenclature{$\tau$}{Text description of a task}
+\nomenclature{$\mathbf{e}_t$}{Latent encoding of $o_t$}
+

@@ -39,7 +39,7 @@
 % --- 5. Layout Setup ---
 \geometry{left=1.0in, right=1.0in, top=1.0in, bottom=1.0in, headheight=85pt, footskip=.25in, includehead}
 \setstretch{1.2}
-\chapterfont{\centering\large}
+\chapterfont{\centering\Large\MakeUppercase}
 \sectionfont{\large}
 \titlespacing*{\chapter}{0pt}{0pt}{10pt}
 
@@ -68,10 +68,10 @@
 \renewcommand{\maketitle}{
 	\begin{titlepage}
 		\begin{center}
-			\setstretch{1.5}
+			\setstretch{1.3}
 			\textbf{\Large \mythesistitle} \\
 			\vspace{1cm}
-			\large{\textit{A report submitted in partial fulfilment of the requirements \\
+			\large{\textit{A report submitted in partial fulfillment of the requirements \\
 					for the award of the degree of}} \\
 			\vspace{0.5cm}
 			\large{\textbf{\mydegreename}} \\
@@ -79,7 +79,9 @@
 			\large{\textbf{\mysubject}} \\[0.5cm]
 			\normalsize{by} \\
 			\large{\textbf{\MakeUppercase{\mystudentname}}} \\
-			\normalsize{\textbf{\mystudentrollno}} \\
+			\normalsize{\textbf{\mystudentrollno}} \\[0.5cm]
+			\normalsize{\textit{under the guidance of}} \\
+			\large{\MakeUppercase{\textbf{\mysupervisorname}}}
 			\vfill
 			\centerline{\includegraphics[width=4.6cm]{figures/iiserb/logo.png}}
 			\vspace{0.5cm}
@@ -95,7 +97,7 @@
 % --- 8. Environments ---
 \renewenvironment{abstract}{
 	\cleardoublepage{}
-	\chapter*{Abstract}
+	\chapter*{ABSTRACT}
 	\addcontentsline{toc}{chapter}{Abstract}
 }{}
 
