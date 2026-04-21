@@ -14,6 +14,7 @@
 \let\Bbbk\relax
 \RequirePackage{amssymb}
 \RequirePackage{newtxtext,newtxmath}
+\RequirePackage[linesnumbered,ruled,noend]{algorithm2e}
 
 % --- 3. Core Packages ---
 \RequirePackage[T1]{fontenc}

@@ -2,7 +2,17 @@
 
 \section{Latent Encoders}
 
-To perform predictions and energy calculations in the latent space, physical quantities need to be encoded to corresponding latent spaces. To perform such an operation, a neural network known as an \textit{encoder} is used. Specifically, we use the latent encoders $f_\theta: \mathcal{I} \to \mathbb{R}^d$ and $f_\phi: \Sigma^\ast \to \mathbb{R}^d$ encode the visual observations $o_t \in \mathcal{I}$ at time $t \in \mathbb{R}$ and the task text description $\tau \in \Sigma^\ast$ to the $d$-dimensional latent space representations $\mathbf{e}_t$ and $\mathbf{z}$ respectively.
+To perform predictions and energy calculations in the latent space, physical quantities need to be encoded to corresponding latent spaces. To perform such an operation, a neural network known as an \textit{encoder} is used. Specifically, we use the latent encoders $f_\theta: \mathcal{I} \to \mathbb{R}^d$ and $f_\phi: \Sigma^\ast \to \mathbb{R}^d$ to encode the visual observations $o_t \in \mathcal{I}$ at time $t \in \mathbb{R}$ and the task text description $\tau \in \Sigma^\ast$ to the $d$-dimensional latent space representations $\mathbf{e}_t$ and $\mathbf{z}$ respectively, as shown in \eqref{eq:visual_encoder} and \eqref{eq:task_encoder}.
+\begin{subequations}
+	\begin{equation}
+		\mathbf{e}_t  = f_\theta(o_t)
+		\label{eq:visual_encoder}
+	\end{equation}
+	\begin{equation}
+		\mathbf{z}    = f_\phi(\tau)
+		\label{eq:task_encoder}
+	\end{equation}
+\end{subequations}
 
 \nomenclature{$\mathcal{I}$}{The set of all images}
 \nomenclature{$\Sigma^\ast$}{The list of all language symbols}
@@ -10,3 +20,30 @@ To perform predictions and energy calculations in the latent space, physical qua
 \nomenclature{$\tau$}{Text description of a task}
 \nomenclature{$\mathbf{e}_t$}{Latent encoding of $o_t$}
 
+\section{Latent Predictive Model}
+
+Given the latent representations of the current state \( \mathbf{e}_t \) and the task \( \mathbf{z} \), the task of the predictor \( g_\theta: (\mathbb{R}^d \times \mathbb{R}^d) \to \mathbb{R}^d \) is to predict the latent of the next state \( \hat{\mathbf{e}}_{t+1} \) that would be observed while completing task \( \tau \) from visual observation \( o_t \), given by
+\begin{equation}
+	\label{eq:predictor}
+	\hat{\mathbf{e}}_{t+1} = g_\theta(\mathbf{e}_t, \mathbf{z}) .
+\end{equation}
+
+\nomenclature{\( g_\theta \)}{The task-conditioned latent predictive model}
+
+This formulation allows us to perform autoregressive rollouts to obtain a sequence of latent observations. For instance, starting from visual observation \( o_t \), the latent sequence of the \( T \) future observations for the agent performing the task \( \tau \), can be obtained using \eqref{eq:predictor} by \cref{algo:rollout}.
+
+\begin{algorithm}
+	\caption{\textsc{Rollout}$(\mathbf{e}_t, \mathbf{z}, g_\theta, T)$}
+	\label{algo:rollout}
+
+	\SetKwProg{Fn}{Function}{}{}
+	\Fn{\textsc{Rollout}$(\mathbf{e}_t, \mathbf{z}, g_\theta, T)$}{
+		$\hat{\mathbf{e}}_{t} \gets \mathbf{e}_t$\;
+
+		\For{$k \gets 0$ \KwTo $T-1$}{
+			$\hat{\mathbf{e}}_{t+k+1} \gets g_\theta(\hat{\mathbf{e}}_{t+k}, \mathbf{z})$\;
+		}
+
+		\Return $\hat{\mathbf{e}}_{t+1:t+T}$\;
+	}
+\end{algorithm}
