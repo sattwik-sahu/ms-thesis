@@ -1,0 +1,65 @@
+\begin{tikzpicture}[
+		node distance=1.2cm and 2.0cm,
+		font=\sffamily\small,
+		% Styles
+		block/.style={rectangle, draw, thick, minimum width=1.8cm, minimum height=1cm, align=center, fill=white, rounded corners=2pt},
+		loss/.style={block, fill=gray!5, minimum width=2.2cm},
+		pred_style/.style={block, fill=Goldenrod!10, draw=Goldenrod!60},
+		enc_style/.style={block, fill=CornflowerBlue!10, draw=CornflowerBlue!60},
+		input/.style={font=\sffamily\bfseries},
+		arrow/.style={-Stealth, thick, line width=1pt},
+		% Style for the EBM container
+		ebm_box/.style={draw=PineGreen, dashed, line width=1.5pt, fill=PineGreen!5, fill opacity=0.3, rounded corners=5pt}
+	]
+
+	% --- Top Branch (Regularization) ---
+	\node [block, label={[font=\bfseries]above:Buffer}] (buffer) {$\mathcal{B}$};
+	\node [enc_style, right=of buffer] (reg_enc) {$g_\theta$};
+	\node [loss, right=of reg_enc] (sig_loss) {$\mathcal{L}_\mathrm{SIGReg}$};
+	\node [above=-0.1cm of sig_loss, font=\scriptsize\itshape] {Regularization};
+
+	% --- Middle Branch (Prediction) ---
+	% Position enc_t below the top branch
+	\node [enc_style, below=1.5cm of reg_enc] (enc_t) {$g_\theta$};
+	\node [pred_style, right=of enc_t] (pred) {${h_\theta}$};
+	\node [loss, right=of pred] (l2_loss) {$\mathcal{L}_{\mathrm{pred}}$};
+
+	% --- Bottom Branch (Target) ---
+	\node [enc_style, below=1.5cm of pred] (enc_tp1) {$g_\theta$};
+
+	% --- Inputs (Vertically Aligned) ---
+	% ot aligned with enc_t
+	\node [input, color=Magenta, left=2.6cm of enc_t] (ot) {$o_t$};
+	% ot+1 forced to align vertically with ot
+	\node [input, color=Blue] at (ot |- enc_tp1) (otp1) {$o_{t+1}$};
+	\node [input, above=0.6cm of pred, color=RedOrange] (z) {$z$ (Task)};
+
+	% --- EBM f_theta Container ---
+	% This box wraps the components that make up the EBM
+	\begin{scope}[on background layer]
+		\node [ebm_box, fit=(enc_t) (enc_tp1) (l2_loss) (pred), label={[PineGreen, font=\bfseries\large]below:EBM $f_\theta$}] (ebm_container) {};
+	\end{scope}
+
+	% --- Connections ---
+
+	% Top path
+	\draw [arrow] (buffer) -- node[above, font=\scriptsize] {$b_0 \sim \mathcal{B}$} (reg_enc);
+	\draw [arrow] (reg_enc) -- (sig_loss);
+
+	% Middle path
+	\draw [arrow, color=Magenta] (ot) -- (enc_t);
+	\draw [arrow, dashed, color=Magenta] (ot) -- (buffer);
+
+	\draw [arrow] (enc_t) -- node[above, color=Magenta!80!black, font=\scriptsize] {$e_t$} (pred);
+	\draw [arrow, color=RedOrange] (z) -- (pred);
+	\draw [arrow] (pred) -- node[above, color=Blue!80!black, font=\scriptsize] {$\hat{e}_{t+1}$} (l2_loss);
+
+	% Bottom path
+	\draw [arrow, color=Blue] (otp1) -- (enc_tp1);
+	\draw [arrow, color=Blue] (enc_tp1) -| node[pos=0.25, above, font=\scriptsize] {$e_{t+1}$} (l2_loss);
+
+	% Energy Output Arrow
+	\draw [arrow, draw=PineGreen, line width=1.5pt] (l2_loss.north) -- ++(0,1.5)
+	node[above, PineGreen, font=\bfseries] {$E(\textcolor{Magenta}{o_t}, \textcolor{Blue}{o_{t+1}}, \textcolor{RedOrange}{z})$};
+
+\end{tikzpicture}

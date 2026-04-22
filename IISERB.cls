@@ -23,7 +23,7 @@
 \RequirePackage{geometry}
 \RequirePackage{fancyhdr}
 \RequirePackage{graphicx}
-\RequirePackage{xcolor}
+\RequirePackage[dvipsnames]{xcolor}
 \RequirePackage{titlesec}
 \RequirePackage{sectsty}
 \RequirePackage{etoolbox}
@@ -33,16 +33,29 @@
 \RequirePackage{caption}
 \RequirePackage{subcaption}
 \RequirePackage{pgffor}
+\RequirePackage{booktabs}
+\RequirePackage{multirow}
+\RequirePackage{siunitx}
+
+% Nomenclature styling
+\renewcommand{\nomname}{List of Symbols and Abbreviations}
+\setlength{\nomlabelwidth}{7em}
+
+% TikZ for diagrams
+\RequirePackage{tikz}
+\usetikzlibrary{calc,positioning,arrows.meta,shapes,shapes.geometric,fit,backgrounds,patterns}
 
 % --- 4. Bibliography (BibLaTeX/Biber) ---
 \RequirePackage[backend=biber, style=ieee, sorting=none]{biblatex}
 
 % --- 5. Layout Setup ---
-\geometry{left=1.0in, right=1.0in, top=1.0in, bottom=1.0in, headheight=85pt, footskip=.25in, includehead}
+\geometry{left=1.2in, right=1.2in, top=1.0in, bottom=1.0in, headheight=12pt, footskip=.25in, includehead}
 \setstretch{1.2}
 \chapterfont{\centering\Large\MakeUppercase}
 \sectionfont{\large}
 \titlespacing*{\chapter}{0pt}{0pt}{10pt}
+
+\newcommand{\mathsc}[1]{{\text{\textsc{#1}}}}
 
 % --- 6. Metadata Macros (Setter/Getter logic) ---
 \newcommand{\thesistitle}[1]{\gdef\mythesistitle{#1}}
@@ -116,6 +129,12 @@
 	\fancyhead[C]{\includegraphics[width=\linewidth]{figures/iiserb/letterhead.png}}
 	\renewcommand{\headrulewidth}{0pt}
 }
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\slshape \leftmark}
+\fancyhead[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
 
 \RequirePackage{hyperref}
 \RequirePackage{bookmark}
