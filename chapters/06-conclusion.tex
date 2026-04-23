@@ -1,1 +1,36 @@
 \chapter{Conclusion and Future Work}
+\label{sec:conclusion}
+
+This concluding chapter synthesizes the findings of this research, evaluating the efficacy of the task-conditioned latent Energy-Based Model (EBM) in the context of robotic manipulation. We reflect on the architectural innovations, the impact of the proposed regularization techniques, and the broader implications for the field of model-based robot learning.
+
+\section{Conclusion}
+
+This thesis presented a generative framework for task-conditioned latent imagination, designed to ground high-level linguistic instructions into physically coherent future observations. By formulating the predictive model as an Energy-Based Model $f_\theta$, we shifted the learning paradigm from simple temporal interpolation to causal, goal-directed reasoning within a learned manifold $\mathbb{R}^d$.
+
+A primary challenge addressed in this work was the phenomenon of latent collapse. Through the implementation of Sketched Isotropic Gaussian Regularization (SIGReg), we empirically demonstrated that the information-theoretic entropy of the latent space can be preserved without the need for expensive contrastive sampling or complex architectural constraints. The comparative analysis in \cref{fig:latent_collapse} confirms that $\mathcal{L}_{\mathrm{SIGReg}}$ effectively transforms the latent space into a non-degenerate isotropic Gaussian manifold, which is critical for maintaining representational diversity.
+
+Furthermore, the introduction of the multi-step rollout loss $\mathcal{L}_{\mathrm{RO}}$ proved essential for ensuring the physical coherence of the predictor $h_\theta$. Our results indicate that while single-step predictive losses $\mathcal{L}_{\mathrm{pred}}$ are sufficient for short-term accuracy, autoregressive stability over long horizons requires a holistic optimization of the trajectory. The Task Sensitivity Index $\beta$, which consistently remained above unity, provides a rigorous quantitative validation of the model's ability to differentiate between semantic instructions. The observed bifurcation between concordant rollouts $\hat{\mathbf{e}}_{1:K}$ and counterfactual rollouts $\hat{\mathbf{e}}'_{1:K}$ (\cref{fig:latent_manifold}) suggests that the model has successfully grounded language into the dynamics of the robotic environment.
+
+In summary, this research demonstrates that a relatively compact architecture—leveraging a \texttt{ViT-Tiny} visual backbone and PEFT-enhanced CLIP encodings—can capture complex task-conditioned dynamics. By imagining future states that are both physically plausible and semantically aligned, this work provides a foundation for robots that can ``think'' before they act, potentially leading to more sample-efficient and robust learning in unstructured environments.
+
+\section{Future Work}
+
+While the current framework demonstrates robust performance on a controlled manipulation dataset, several avenues for future research remain to be explored to scale this approach to general-purpose robotics.
+
+\paragraph{Closed-loop Control and Planning}
+The most immediate extension of this work is the integration of the latent predictor into a model-based reinforcement learning (MBRL) or Model Predictive Control (MPC) framework. Given the energy-based nature of our model, the predicted energy $E(o_t, o_{t+1}, \tau)$ can serve as a zero-shot reward signal. Future work will focus on utilizing the autoregressive rollout mechanism for ``imagination-based'' planning, where the agent evaluates multiple candidate action sequences in the latent space and selects the one that minimizes the total energy relative to the task $\tau$.
+
+\paragraph{Scaling to Complex Manipulations and Environments}
+The current dataset involves a tabletop environment with three primitives. Scaling the EBM to more complex, multi-stage tasks (e.g., ``Open the drawer and place the red cube inside'') remains a significant challenge. This would likely require hierarchical task encoders or a modular predictor architecture capable of handling long-term dependencies. Investigating the model's performance in more visually complex environments with occlusions and varying lighting conditions would also be essential for real-world deployment.
+
+\paragraph{Probabilistic Rollouts and Uncertainty Estimation}
+Currently, the predictor $h_\theta$ is deterministic. However, the future is inherently uncertain, especially in contact-rich manipulation tasks. Incorporating a stochastic component—such as a Variational Autoencoder (VAE) or a diffusion-based transition model—within the EBM framework would allow the model to represent a distribution of possible futures. Estimating predictive uncertainty would enable the robot to identify when it is ``confused'' by an instruction, allowing it to seek clarification or revert to a safe state.
+
+\paragraph{Sim-to-Real Transfer}
+To move beyond simulated environments, the transferability of the learned latent manifold to real robotic hardware must be evaluated. Research into domain randomization and latent space alignment between simulation and reality will be critical. If the encoder $g_\theta$ can be made robust to the visual discrepancies between the two domains, the ``imagination'' capabilities developed in simulation could be directly applied to real-world task execution.
+
+\nomenclature{MPC}{Model Predictive Control}
+\nomenclature{MBRL}{Model-Based Reinforcement Learning}
+\nomenclature{Sim2Real}{Simulation-to-Reality transfer}
+\nomenclature{VAE}{Variational Autoencoder}
+

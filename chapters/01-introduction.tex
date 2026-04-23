@@ -1,10 +1,39 @@
 \chapter{Introduction}
+\label{sec:introduction}
 
 \section{Motivation}
 
+The quest for Autonomous Machine Intelligence (AMI) in robotics is largely driven by the desire to build agents capable of understanding high-level human instructions and executing them in complex, unstructured environments~\cite{lecun2022path}. Traditionally, reinforcement learning (RL) has tackled robotic control through model-free paradigms, mapping high-dimensional visual observations directly to motor actions~\cite{nair2018visual}. However, these approaches are notoriously sample-inefficient and struggle with generalization, as they merely memorize reactive behaviors rather than understanding the underlying physics of the environment.
+
+To address these limitations, the field has increasingly pivoted toward Model-Based Reinforcement Learning (MBRL) and the development of ``world models''~\cite{haarnoja2017reinforcement}. World models learn the transition dynamics of an environment, allowing an agent to simulate or ``imagine'' the consequences of its actions before executing them. Because predicting future states in the raw pixel space is computationally prohibitive and prone to capturing task-irrelevant noise, state-of-the-art world models operate within compressed latent spaces. Frameworks such as TD-MPC~\cite{Hansen2022tdmpc}, its successor TD-MPC2~\cite{hansen2024tdmpc2}, and recent Joint-Embedding Predictive Architectures (JEPAs) like LeWorldModel~\cite{Maes2026LeWorldModelSE} and DINO-WM~\cite{zhou2025dinowm} have demonstrated that planning in a latent manifold can yield highly sample-efficient and robust continuous control.
+
+By leveraging Model Predictive Control (MPC) on top of these latent world models, agents can optimize action trajectories at runtime. This optimization-based approach offers two distinct advantages over reactive policies: first, it allows the system to allocate more computational resources to difficult maneuvers and less to trivial ones; second, by continuously re-planning in a closed loop, the agent gains strong dynamic adaptation capabilities, correcting for environmental stochasticity and unexpected disturbances on the fly.
+
 \section{Problem Statement}
+
+Despite the success of latent MPC frameworks, a fundamental limitation restricts their deployment in general-purpose, language-guided robotics. Current goal-conditioned predictive control methods fundamentally require a latent representation of the target goal at inference time to formulate the optimization cost function. In practical deployment scenarios, however, a user simply provides a high-level linguistic instruction (e.g., ``Pick up the red cube''); the agent is not provided with an explicit visual image or latent vector of the future success state.
+
+Without a goal representation, the MPC optimizer lacks a reference trajectory or terminal state to guide the action sequence. Consequently, there is a critical missing link between abstract natural language commands and the dense, step-by-step latent tracking signals required by closed-loop optimal control algorithms.
+
+To bridge this gap, this thesis aims to develop a task-conditioned, energy-based latent predictive model. Instead of relying on a pre-defined future goal image, the proposed model must understand the task-conditioned dynamics of the environment derived solely from the current visual observation and a linguistic prompt. By autoregressively unrolling a sequence of future latent states conditioned on the task, the model acts as an ``imagination engine.'' This rolled-out latent trajectory provides the exact step-by-step reference signal needed for a downstream latent MPC optimizer to track.
+
+However, predicting sequential futures in a joint-embedding architecture introduces a severe risk of \textit{latent collapse}—a failure mode where the encoder maps all observations to a constant vector to trivially minimize prediction error. While techniques to solve latent collapse exist in self-supervised learning, they must be carefully integrated into the autoregressive predictive framework without destroying the temporal coherence of the rolled-out trajectories. Therefore, the core problem is to build a language-conditioned latent trajectory generator that maintains a non-degenerate, information-rich manifold suitable for robust downstream control.
 
 \section{Contributions}
 
-\section*{Structure}
+This thesis addresses the aforementioned challenges by formulating and evaluating a generative framework for task-conditioned latent predictive modeling. By treating the transition dynamics as an Energy-Based Model (EBM), we provide a principled approach to evaluating the compatibility of state trajectories with language instructions. The primary contributions of this work are as follows:
+
+\begin{enumerate}
+	\item \textbf{Formulation of a Task-Conditioned Latent EBM:} We design a predictive architecture that fuses high-dimensional visual observations (via Vision Transformers) and semantic task descriptions (via PEFT-adapted CLIP encoders) into a shared latent manifold. This model serves as a forward dynamics engine capable of autoregressively generating reference trajectories without requiring visual goal states at inference time.
+
+	\item \textbf{Integration of Information-Theoretic Regularization for Sequential Rollouts:} To make the generated latent trajectories viable for downstream MPC tracking, we integrate Sketched Isotropic Gaussian Regularization (SIGReg)~\cite{lejepa} with a multi-step rollout loss. We demonstrate that this combination provably mitigates latent collapse while enforcing long-horizon physical coherence.
+
+	\item \textbf{Empirical Validation of Task Sensitivity:} We provide quantitative and qualitative analyses demonstrating the model's discriminative grounding of language. Through the formulation of a Task Sensitivity Index and PCA-based manifold visualizations, we show that the model successfully synthesizes divergent, causally-correct latent trajectories based purely on differing counterfactual linguistic instructions.
+\end{enumerate}
+
+While the direct integration of this model with a real-time MPC optimizer is reserved for future work, the framework developed herein provides the necessary representational foundation and predictive signals required for language-guided, closed-loop optimal control.
+
+\section*{Structure of the Thesis}
+
+The remainder of this thesis is structured as follows. \cref{sec:background} provides a comprehensive background and literature review, covering advancements in goal-conditioned reinforcement learning, world models, and non-contrastive self-supervised representation learning. \cref{sec:methodology} details the methodology, including the mathematical formulation of the energy-based model, the autoregressive rollout mechanism, and the regularization techniques employed. \cref{sec:experiments} outlines the experimental setup, detailing the dataset, training configurations, and architectural baselines. \cref{sec:results} presents the results and discussion, evaluating the model's task sensitivity, latent manifold geometry, and the efficacy of the collapse-mitigation strategies. Finally, \cref{sec:conclusion} concludes the thesis and outlines avenues for future research, particularly focusing on the integration of this framework into closed-loop control systems.
 

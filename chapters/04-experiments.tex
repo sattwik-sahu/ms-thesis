@@ -1,4 +1,5 @@
 \chapter{Experimental Setup}
+\label{sec:experiments}
 
 \section{Training}
 
@@ -56,7 +57,7 @@ Training stability was further ensured through the implementation of gradient no
 
 The latent predictive EBM was trained on a custom dataset comprising \num{12000} robot manipulation episodes. The environment consists of a tabletop workspace featuring three multi-colored primitives (cubes) interacting with a robotic manipulator. Visual observations $o_t$ are RGB images resized to $224 \times 224$ pixels. Each episode is paired with a semantic task description $\tau \in \Sigma^\ast$, such as $\tau = \text{``Lift the red cube''}$, which defines the goal-conditioned behavior for that trajectory. \cref{fig:dataset} illustrates representative samples of visual observations and their associated linguistic instructions.
 
-\begin{figure}[htbp]
+\begin{figure}
 	\begin{center}
 		\begin{subfigure}{0.45\textwidth}
 			\includegraphics[width=\textwidth]{figures/dataset/pick-red.png}

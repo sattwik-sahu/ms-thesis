@@ -43,7 +43,7 @@
 
 	% --- 6. FINAL AGGREGATION (Far Right) ---
 	\node [rectangle, draw=BrickRed, fill=BrickRed!5, thick, minimum width=1.2cm, minimum height=1cm, rounded corners=3pt]
-	(final_loss) at (15.2, -1.25) {$\displaystyle \mathcal{L}_{\mathrm{RO}}$};
+	(final_loss) at (13.5, -1.25) {$\displaystyle \mathcal{L}_{\mathrm{RO}}$};
 
 	% --- CONNECTIONS ---
 
@@ -77,8 +77,8 @@
 	\draw [arrow, Gray] (hK) -- (dK);
 
 	% Accumulation to Final Loss (Dashed line spanning the rollout)
-	\draw [arrow, dashed, BrickRed, line width=0.8pt] (d1) -- (d2);
-	\draw [arrow, dashed, BrickRed, line width=0.8pt] (d2) -- (dK);
-	\draw [arrow, dashed, BrickRed, line width=0.8pt] (dK) -- (final_loss.west);
+	\draw [arrow, dashed, BrickRed!30, line width=0.8pt] (d1) -- (d2);
+	\draw [arrow, dashed, BrickRed!30, line width=0.8pt] (d2) -- (dK);
+	\draw [arrow, dashed, BrickRed!30, line width=0.8pt] (dK) -- (final_loss.west);
 
 \end{tikzpicture}

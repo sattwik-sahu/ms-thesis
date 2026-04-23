@@ -1,8 +1,20 @@
 \chapter{Results and Discussion}
+\label{sec:results}
 
 \section{Training Dynamics and Convergence}
 
+The training convergence of the EBM is illustrated in \cref{fig:training_loss_curve}, which monitors the total loss $\mathcal{L}$ as defined in \cref{eq:loss_combined}. We observe a rapid exponential decay in the initial \num{2500} steps, followed by asymptotic convergence toward a stable terminal value of approximately \num{3.2}. This trajectory indicates that the joint optimization of the encoders $\{g_\theta, g_\phi\}$ and the predictor $h_\theta$ successfully minimizes the system energy. Furthermore, the low variance in the terminal phase validates the effectiveness of our training stabilization techniques, including gradient norm clipping and weight decay, in preventing optimization instabilities.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{figures/results/training_loss_curve.pdf}
+	\end{center}
+	\caption{Convergence of the total training loss $\mathcal{L}$ over approximately \num{28000} optimization steps.}\label{fig:training_loss_curve}
+\end{figure}
+
 \section{Qualitative Analysis of Latent Rollouts}
+
+The video in \cref{fig:qual_vis} demonstrates that the model has successfully learnt the task-conditioned visual dynamics of the environment. It has avoided marginalizing the task and reasons different trajectories in the latent space for different tasks. Moreover, fine-grained movements of the robotic arm are captured in the reconstructed video and latent decodings, which indicates efficient use the of relatively low-dimensional latent space to capture information of minute details in the environment.
 
 \begin{figure}
 	\begin{center}
@@ -23,5 +35,47 @@
 
 \section{Quantitative Task Sensitivity}
 
+The quantitative evaluation of task-conditioned predictive accuracy is illustrated in \cref{fig:rollout_error}. The temporal evolution of the $L_2$ distance reveals that for the initial rollout horizon ($t < 8$), the error metrics $E_t$ and $E'_t$ are approximately equivalent. This alignment confirms that short-term predictions are primarily dominated by the temporal continuity of the visual state. However, as the rollout progresses, the counterfactual error $E'_t$ diverges sharply, accumulating to a terminal value of $\sim 38$, while the concordant error $E_t$ stabilizes significantly lower at $\sim 10$.
+
+This divergence is further characterized by the Task Sensitivity Index $\beta$ in \cref{fig:beta_curve}. Throughout the training duration, $\beta$ maintains a mean value greater than unity, indicating that the model consistently predicts trajectories that are further from the ground truth when conditioned on a counterfactual task $\tau'$. The stabilization of $E_t$ alongside the monotonic increase of $E'_t$ demonstrates that the predictor $h_\theta$ has successfully grounded the linguistic task specifications into distinct latent dynamics, effectively differentiating between semantic instructions within the learned manifold.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{figures/results/rollout_error.pdf}
+	\end{center}
+	\caption{Temporal evolution of $L_2$ prediction errors $E_t$ and $E'_t$. Divergence over the rollout horizon illustrates the model’s discriminative sensitivity to task-conditioned semantic specifications.}\label{fig:rollout_error}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{figures/results/task_sensitivity_index.pdf}
+	\end{center}
+	\caption{Evolution of Task Sensitivity Index $\beta$ during training. Values above unity signify successful grounding of linguistic instructions into differentiated latent predictive trajectories.}\label{fig:beta_curve}
+\end{figure}
+
+
 \section{Latent Manifold Analysis}
+
+The structural properties of the latent manifold and the task-conditioned dynamics of the predictor $h_\theta$ are characterized via a PCA projection in \cref{fig:latent_manifold}. The gray point cloud represents the support of the latent space $\mathbb{R}^d$ as regularized by the SIGReg objective. Starting from the initial state $\mathbf{e}_0$, both the concordant rollout $\hat{\mathbf{e}}_{1:K}$ and the counterfactual rollout $\hat{\mathbf{e}}'_{1:K}$ remain within the high-density regions of the manifold, suggesting that the model respects the learned data distribution.
+
+In the early temporal horizon ($t < 8$), the trajectories exhibit significant overlap, indicating that the immediate predictive dynamics are primarily governed by the visual state momentum of $o_t$. Beyond this horizon, a distinct branching is observed --- the concordant rollout tracks the ground-truth trajectory $\mathbf{e}_{0:K}$ with high fidelity, while the counterfactual rollout diverges toward a different sector of the manifold. This bifurcation demonstrates that $h_\theta$ successfully integrates the task latent $\mathbf{z}$ to perform task-concordant causal reasoning rather than mere temporal interpolation.
+
+The efficacy of the SIGReg objective in mitigating representational degeneracy is visualized in \cref{fig:latent_collapse}. In the baseline configuration without regularization, the encoder $g_\theta$ succumbs to complete latent collapse, where the latent manifold is reduced to a singular point-mass distribution. Such a mapping, $g_\theta(o) \approx \mathbf{k}$, represents a trivial solution to the predictive objective, wherein the information-theoretic entropy of the latent space is effectively zero.
+
+In contrast, the implementation of $\mathcal{L}_{\mathrm{SIGReg}}$ successfully preserves a high-variance, isotropic distribution, as evidenced in the right panel of \cref{fig:latent_collapse}. By minimizing the Epps--Pulley test statistic, the encoder is forced to map visual observations $\{o_i\}_{i=1}^N$ to a distribution that approximates $\mathcal{N}(0,1)$ across the projected directions. This regularization ensures that the latent space remains non-degenerate, maintaining the necessary discriminative capacity for the predictor $h_\theta$ to perform task-conditioned rollouts across the encoded state space.
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{figures/results/latent_trajectories.pdf}
+	\end{center}
+	\caption{PCA projection of latent trajectories. Note the branching of the counterfactual rollout $\hat{\mathbf{e}}'_{1:K}$ from the task-concordant prediction $\hat{\mathbf{e}}_{1:K}$ and ground-truth sequence $\mathbf{e}_{0:K}$.}\label{fig:latent_manifold}
+\end{figure}
+
+\begin{figure}
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{figures/results/latent_spaces.pdf}
+	\end{center}
+	\caption{Comparison of latent distributions. (Left) Complete latent collapse in the unregularized baseline. (Right) Preservation of an isotropic Gaussian manifold using SIGReg to maintain representational entropy.}\label{fig:latent_collapse}
+\end{figure}
+
 

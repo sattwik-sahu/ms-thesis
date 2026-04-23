@@ -51,7 +51,7 @@
 % --- 5. Layout Setup ---
 \geometry{left=1.2in, right=1.2in, top=1.0in, bottom=1.0in, headheight=12pt, footskip=.25in, includehead}
 \setstretch{1.2}
-\chapterfont{\centering\Large\MakeUppercase}
+\chapterfont{\centering\Huge\MakeUppercase}
 \sectionfont{\large}
 \titlespacing*{\chapter}{0pt}{0pt}{10pt}
 
