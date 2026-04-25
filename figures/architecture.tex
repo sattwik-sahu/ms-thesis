@@ -3,20 +3,20 @@
 		font=\sffamily\small,
 		% Professional Grayscale Styles
 		block/.style={rectangle, draw=black!80, thick, minimum width=1.8cm, minimum height=1cm, align=center, fill=white, rounded corners=2pt},
-		loss/.style={block, fill=BrickRed!5, draw=BrickRed, minimum width=2.2cm},
-		pred_style/.style={block, fill=Goldenrod!5, draw=Goldenrod},
-		enc_style/.style={block, fill=CornflowerBlue!5, draw=CornflowerBlue},
+		loss/.style={block, fill=OrangeRed!5, draw=OrangeRed, minimum width=2.2cm},
+		pred_style/.style={block, fill=Dandelion!5, draw=Dandelion},
+		enc_style/.style={block, fill=Cerulean!5, draw=Cerulean},
 		input/.style={font=\sffamily\bfseries, text=black},
 		arrow/.style={-Stealth, thick, draw=black!70, line width=0.8pt},
 		% Style for the EBM container
-		ebm_box/.style={draw=PineGreen, dashed, line width=1.2pt, fill=gray!5, fill opacity=0.4, rounded corners=5pt}
+		ebm_box/.style={draw=Emerald, dashed, line width=1.2pt, fill=gray!5, fill opacity=0.4, rounded corners=5pt}
 	]
 
 	% --- Top Branch (Regularization) ---
-	\node [block, label={[font=\bfseries, text=black!80]above:Buffer}] (buffer) {$\mathcal{B}$};
+	\node [block, label={[font=\bfseries, text=black!80]}] (buffer) {$\mathcal{B}$};
 	\node [enc_style, right=of buffer] (reg_enc) {$g_\theta$};
 	\node [loss, right=of reg_enc] (sig_loss) {$\mathcal{L}_\mathrm{SIGReg}$};
-	\node[above=-0.1cm of sig_loss, font=\scriptsize\itshape, text=black!60] {Regularization};
+	\node[above=-0.1cm of sig_loss, font=\scriptsize, text=Gray!75]{Regularization};
 
 	% --- Middle Branch (Prediction) ---
 	% Position enc_t below the top branch
@@ -32,7 +32,7 @@
 	\node[input, left=2.6cm of enc_t] (ot) {$o_t$};
 	% ot+1 forced to align vertically with ot
 	\node [input] at (ot |- enc_tp1) (otp1) {$o_{t+1}$};
-	\node [input, above=0.6cm of pred] (z) {$\mathbf{z}$ (Task)};
+	\node [input, above=0.6cm of pred] (z) {$\mathbf{z}$};
 
 	% --- EBM f_theta Container ---
 	% This box wraps the components that make up the EBM

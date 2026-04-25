@@ -3,16 +3,17 @@
 	node distance=1.5cm and 2.5cm,
 	font=\sffamily\small,
 	% Professional Palette from dvipsnames
-	enc_style/.style={rectangle, draw=CornflowerBlue, thick, fill=CornflowerBlue!5, minimum width=1.6cm, minimum height=0.8cm, rounded corners=2pt},
-	pred_style/.style={rectangle, draw=Goldenrod, thick, fill=Goldenrod!5, minimum width=1.6cm, minimum height=0.8cm, rounded corners=2pt},
-	loss_style/.style={rectangle, draw=Gray, thick, fill=White, minimum width=1.6cm, minimum height=0.7cm, rounded corners=2pt},
+	block/.style={rectangle, draw=black!80, thick, minimum width=1.8cm, minimum height=1cm, align=center, fill=white, rounded corners=2pt},
+	enc_style/.style={block, draw=Cerulean, thick, fill=Cerulean!5, minimum width=1.6cm, minimum height=0.8cm, rounded corners=2pt},
+	pred_style/.style={block, draw=Dandelion, thick, fill=Dandelion!5, minimum width=1.6cm, minimum height=0.8cm, rounded corners=2pt},
+	loss_style/.style={block, draw=Gray, thick, fill=White, minimum width=1.6cm, minimum height=0.7cm, rounded corners=2pt},
 	input_style/.style={font=\sffamily\bfseries},
 	arrow/.style={-{Stealth[scale=1.2]}, thick, draw=Black!80}
 	]
 
 	% --- 1. TASK ENCODING (Top Left) ---
 	\node [input_style] (tau) at (0, 1.8) {$\tau$};
-	\node [enc_style] (g_phi) at (1.8, 1.8) {$g_\phi$};
+	\node [enc_style, fill=BlueViolet!5, draw=BlueViolet] (g_phi) at (1.8, 1.8) {$g_\phi$};
 	\node [right=0.6cm of g_phi, font=\bfseries] (z) {$\mathbf{z}$};
 
 	% --- 2. THE STARTING POINT (Left) ---
@@ -42,7 +43,7 @@
 	\node [loss_style] (dK) at (11.3, -1.25) {$\|\cdot\|^2$};
 
 	% --- 6. FINAL AGGREGATION (Far Right) ---
-	\node [rectangle, draw=BrickRed, fill=BrickRed!5, thick, minimum width=1.2cm, minimum height=1cm, rounded corners=3pt]
+	\node [rectangle, draw=OrangeRed, fill=OrangeRed!5, thick, minimum width=1.2cm, minimum height=1cm, rounded corners=3pt]
 	(final_loss) at (13.5, -1.25) {$\displaystyle \mathcal{L}_{\mathrm{RO}}$};
 
 	% --- CONNECTIONS ---
@@ -77,8 +78,8 @@
 	\draw [arrow, Gray] (hK) -- (dK);
 
 	% Accumulation to Final Loss (Dashed line spanning the rollout)
-	\draw [arrow, dashed, BrickRed!30, line width=0.8pt] (d1) -- (d2);
-	\draw [arrow, dashed, BrickRed!30, line width=0.8pt] (d2) -- (dK);
-	\draw [arrow, dashed, BrickRed!30, line width=0.8pt] (dK) -- (final_loss.west);
+	\draw [arrow, dashed, OrangeRed!30, line width=0.8pt] (d1) -- (d2);
+	\draw [arrow, dashed, OrangeRed!30, line width=0.8pt] (d2) -- (dK);
+	\draw [arrow, dashed, OrangeRed!30, line width=0.8pt] (dK) -- (final_loss.west);
 
 \end{tikzpicture}
