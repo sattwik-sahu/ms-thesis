@@ -36,6 +36,7 @@
 \RequirePackage{booktabs}
 \RequirePackage{multirow}
 \RequirePackage{siunitx}
+\RequirePackage{datetime}
 
 % Nomenclature styling
 \renewcommand{\nomname}{List of Symbols and Abbreviations}
@@ -49,8 +50,8 @@
 \RequirePackage[backend=biber, style=ieee, sorting=none]{biblatex}
 
 % --- 5. Layout Setup ---
-\geometry{left=1.2in, right=1.2in, top=1.0in, bottom=1.0in, headheight=12pt, footskip=.25in, includehead}
-\setstretch{1.2}
+\geometry{left=1.2in, right=1.2in, top=1.0in, bottom=1.0in, headheight=0.5in, footskip=.25in, includehead}
+\setstretch{1.25}
 \chapterfont{\centering\Huge\MakeUppercase}
 \sectionfont{\large}
 \titlespacing*{\chapter}{0pt}{0pt}{10pt}
@@ -74,7 +75,9 @@
 \supervisorname{Supervisor Name}
 \studentrollno{12345}
 \subject{Subject}
-\thesisdate{\today}
+\newdateformat{MyDateFormat}{%
+	\monthname[\THEMONTH] \THEYEAR}
+\thesisdate{\MyDateFormat\today}
 \departmentname{Department of \mysubject}
 \degreename{Degree Name}
 
