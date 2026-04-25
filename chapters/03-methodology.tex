@@ -1,7 +1,12 @@
 \chapter{Methodology}
 \label{sec:methodology}
 
+This chapter details the framework for our task-conditioned predictive model. Building on the foundations of EBMs and JEPAs, we design an autoregressive ``imagination'' model. Given a current state and a text description of a task, this model predicts a physically coehrerent sequence of future latent states. By operating entirely in a compressed latent space rather than generating raw pixels, the model avoids heavy computational costs. At the same time, it learns an information-rich representation of the visual environment, preserving the exact semantic features a robot needs to plan and execute tasks.
+
+The remainder of this chapter is structured as follows. \cref{sec:latent_encoders} defines the specialized neural encoders used to project high-dimensional visual observations and task descriptions into their corresponding latent representations. \cref{sec:latent_predictive_model} introduces the autoregressive predictive model responsible for simulating future latent trajectories. \cref{sec:training_ebm} details the energy-based formulation of the training objective, including the integration of a multi-step rollout loss for temporal coherence and Sketched Isotropic Gaussian Regularization (SIGReg) to mathematically prevent latent collapse. Finally, \cref{sec:model_architectures} specifies the concrete neural network architectures, including Vision Transformers and Parameter-Efficient Fine-Tuned (PEFT) foundation models, employed to realize this system.
+
 \section{Latent Encoders}
+\label{sec:latent_encoders}
 
 To facilitate predictive modeling and energy estimation within a structured manifold, sensory observations and task specifications must be mapped to a joint latent space. This transformation is performed by specialized neural architectures referred to as \textit{encoders}. Specifically, we define a visual encoder $g_\theta: \mathcal{I} \to \mathbb{R}^d$ and a linguistic encoder $g_\phi: \Sigma^\ast \to \mathbb{R}^d$. These models map visual observations $o_t \in \mathcal{I}$ at time $t$ and task-specific textual descriptions $\tau \in \Sigma^\ast$ to $d$-dimensional latent representations $\mathbf{e}_t$ and $\mathbf{z}$ respectively, as formulated in \cref{eq:visual_encoder} and \cref{eq:task_encoder}:
 \begin{subequations}
@@ -25,6 +30,7 @@ To facilitate predictive modeling and energy estimation within a structured mani
 \nomenclature{$\mathbf{z}$}{Latent task representation in $\mathbb{R}^d$}
 
 \section{Latent Predictive Model}
+\label{sec:latent_predictive_model}
 
 The dynamics of the environment are modeled in the latent space through a predictor $h_\theta: (\mathbb{R}^d \times \mathbb{R}^d) \to \mathbb{R}^d$. Conditioned on the current latent state \( \mathbf{e}_t \) and the task representation \( \mathbf{z} \), the predictor estimates the subsequent latent state \( \hat{\mathbf{e}}_{t+1} \) corresponding to a successful execution of task \( \tau \):
 \begin{equation}
@@ -55,9 +61,12 @@ By iteratively applying $h_\theta$, we can generate autoregressive trajectories 
 \nomenclature{\( a_{i:j} \)}{Sequence of quantity \( a \) from timestep \( i \) to \( j \)}
 
 \section{Training the Energy-Based Model}
-\label{sec:training}
+\label{sec:training_ebm}
 
-\subsection{Energy Functional Formulation}
+This section provides a detailed overview of the energy-based formulation and process of training the latent-predictive model. \cref{sec:method_ebm_formulation} formulates the latent predictive model in terms of an EBM. Further, \cref{sec:method_pred_obj}, \cref{sec:method_reg_collapse_prev} and \cref{sec:ms_roll_phy} provide a breakdown of the different terms in the loss function, with \cref{sec:combined_optimization} formalizes the training of the model as an optimization on the parameters of the energy-based model.
+
+\subsection{Energy-Based Model Formulation}
+\label{sec:method_ebm_formulation}
 
 The visual encoder and the latent predictor collectively define an Energy-Based Model (EBM), denoted as $f_\theta = \{g_\theta, h_\theta\}$. The energy associated with a transition from observation \( o_t \) to a candidate state \( o'_{t+1} \), given a task \( \tau \), is quantified by the $L_2$ distance between the predicted and encoded latents:
 \begin{equation}
@@ -72,6 +81,7 @@ Lower energy levels signify transitions with higher statistical likelihood. This
 In practice, the normalizing partition function in the denominator is intractable; however, it can be treated as a constant during optimization to facilitate maximum likelihood estimation.
 
 \subsection{Predictive Objective}
+\label{sec:method_pred_obj}
 
 During training, we utilize trajectories sampled from agent episodes. For a ground-truth transition $\{ o_t, o_{t+1} \}$, the model objective is to minimize the energy, ideally reaching zero, which corresponds to $p(o_{t+1} \mid o_t, \tau) = 1$. The predictive loss is thus defined as:
 \begin{subequations}
@@ -83,6 +93,7 @@ During training, we utilize trajectories sampled from agent episodes. For a grou
 \end{subequations}
 
 \subsection{Regularization and Latent Collapse Mitigation}
+\label{sec:method_reg_collapse_prev}
 
 A naive minimization of \( \mathcal{L}_\mathrm{pred} \) from \cref{eq:predictive_loss} poses a significant risk of \textit{latent collapse}. In this degenerate state, the encoder $g_\theta$ maps all observations to a constant vector $\mathbf{k}$, while the predictor $h_\theta$ reduces to an identity mapping. This results in zero loss but eliminates the information-carrying capacity of the latent space, rendering the representations indistinguishable.
 
@@ -97,7 +108,7 @@ The Epps-Pulley test statistic is then computed between the scalar projections $
 	\label{eq:loss_sigreg}
 \end{equation}
 
-\begin{figure}[htbp]
+\begin{figure}
 	\begin{center}
 		\input{figures/sigreg.tex}
 	\end{center}
@@ -109,6 +120,7 @@ The Epps-Pulley test statistic is then computed between the scalar projections $
 \nomenclature{\( \mathcal{N}(\mu, \sigma) \)}{Gaussian distribution with mean $\mu$ and variance $\sigma^2$}
 
 \subsection{Multi-Step Rollout and Physical Coherence}
+\label{sec:ms_roll_phy}
 
 While the single-step predictive loss encourages local accuracy, it is insufficient for ensuring long-term physical coherence in autoregressive generation. To address compounding errors and enforce temporal consistency, we introduce a $K$-step rollout loss. Given an initial observation \( o_t \) and the ground-truth sequence \( o_{t+1:t+K} \), the rollout loss is defined as:
 \begin{equation}
@@ -117,14 +129,15 @@ While the single-step predictive loss encourages local accuracy, it is insuffici
 \end{equation}
 where \( \hat{\mathbf{e}}_{t+1:t+K} \) is obtained via the \textsc{Rollout} procedure (\cref{algo:rollout}). This objective ensures that the predictor remains tethered to physically plausible trajectories over extended horizons, as shown in \cref{fig:rollout}.
 
-\begin{figure}[htbp]
+\begin{figure}
 	\begin{center}
 		\input{figures/rollout.tex}
 	\end{center}
 	\caption{\textbf{Rollout Loss mechanism.}\; The loss is computed by comparing the sequence of latents generated by the predictor's autoregressive rollout against the latents encoded from the ground-truth visual observations.}\label{fig:rollout}
 \end{figure}
 
-\subsection{Total Optimization Objective}
+\subsection{Combined Optimization Objective}
+\label{sec:combined_optimization}
 
 \begin{figure}
 	\begin{center}
@@ -140,12 +153,18 @@ The comprehensive training objective combines predictive accuracy, temporal cohe
 	+ \lambda_\mathrm{SIGReg} \mathcal{L}_\mathrm{SIGReg} ,
 	\label{eq:loss_combined}
 \end{equation}
-where \( \lambda_\mathrm{RO} \) and \( \lambda_\mathrm{SIGReg} \) are hyperparameters regulating the contribution of the rollout and regularization terms, respectively.
+where \( \lambda_\mathrm{RO} \) and \( \lambda_\mathrm{SIGReg} \) are hyperparameters regulating the contribution of the rollout and regularization terms, respectively. The \textit{training} of the model is defined as an optimization, formalized as
+\begin{equation}
+	(\theta^\ast, \gamma^\ast) = \underset{(\theta, \gamma)}{\arg \min\ }{\mathcal{L}(\theta, \gamma)} ,
+	\label{eq:training_optimization}
+\end{equation}
+where \( \mathcal{L}(\theta, \gamma) \) specifies that the combined loss \( \mathcal{L} \) is a function of the parameters of the encoder, predictor and task encoder. Here, \( (\theta^ast, \gamma^\ast) \) is the combination of parameters that minimizes the combined loss function defined in \cref{eq:loss_combined}.
 
 \nomenclature{\( \lambda_\mathrm{RO} \)}{Weighting hyperparameter for the rollout loss}
 \nomenclature{\( \lambda_\mathrm{SIGReg} \)}{Weighting hyperparameter for the SIGReg loss}
 
 \section{Model Architectures}
+\label{sec:model_architectures}
 
 \paragraph{Vision Encoder} We employ a Vision Transformer (\texttt{ViT})~\cite{vit} as the primary visual backbone. Our experiments demonstrate that a \texttt{ViT-Tiny} configuration (5M parameters) provides a sufficient balance between representational capacity and computational overhead.
 

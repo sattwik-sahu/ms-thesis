@@ -1,7 +1,12 @@
 \chapter{Results and Discussion}
 \label{sec:results}
 
+Following the empirical framework established in the preceding chapter, this chapter presents the quantitative and qualitative evaluation of the proposed task-conditioned latent Energy-Based Model (EBM). Our analysis is structured to systematically validate the core hypotheses of this thesis: the stable optimization of the joint-embedding architecture, the successful grounding of high-level linguistic instructions into causal latent dynamics, and the efficacy of information-theoretic regularization in preserving representational entropy during autoregressive generation.
+
+The remainder of this chapter is organized as follows. \cref{sec:results_training} examines the optimization dynamics and convergence stability of the EBM. \cref{sec:results_qual} provides a qualitative assessment of the model's predictive capabilities, utilizing the convolutional decoder to project latent ``imaginations'' back into human-interpretable visual sequences. \cref{sec:results_quant} presents a rigorous quantitative analysis of task-conditioning efficacy via the Task Sensitivity Index. Finally, \cref{sec:results_manifold} explores the geometric properties of the learned latent space, visualizing task-driven branching trajectories and empirically confirming the prevention of latent collapse via SIGReg.
+
 \section{Training Dynamics and Convergence}
+\label{sec:results_training}
 
 The training convergence of the EBM is illustrated in \cref{fig:training_loss_curve}, which monitors the total loss $\mathcal{L}$ as defined in \cref{eq:loss_combined}. We observe a rapid exponential decay in the initial \num{2500} steps, followed by asymptotic convergence toward a stable terminal value of approximately \num{3.2}. This trajectory indicates that the joint optimization of the encoders $\{g_\theta, g_\phi\}$ and the predictor $h_\theta$ successfully minimizes the system energy. Furthermore, the low variance in the terminal phase validates the effectiveness of our training stabilization techniques, including gradient norm clipping and weight decay, in preventing optimization instabilities.
 
@@ -13,6 +18,7 @@ The training convergence of the EBM is illustrated in \cref{fig:training_loss_cu
 \end{figure}
 
 \section{Qualitative Analysis of Latent Rollouts}
+\label{sec:results_qual}
 
 The video in \cref{fig:qual_vis} demonstrates that the model has successfully learnt the task-conditioned visual dynamics of the environment. It has avoided marginalizing the task and reasons different trajectories in the latent space for different tasks. Moreover, fine-grained movements of the robotic arm are captured in the reconstructed video and latent decodings, which indicates efficient use the of relatively low-dimensional latent space to capture information of minute details in the environment.
 
@@ -34,6 +40,7 @@ The video in \cref{fig:qual_vis} demonstrates that the model has successfully le
 
 
 \section{Quantitative Task Sensitivity}
+\label{sec:results_quant}
 
 The quantitative evaluation of task-conditioned predictive accuracy is illustrated in \cref{fig:rollout_error}. The temporal evolution of the $L_2$ distance reveals that for the initial rollout horizon ($t < 8$), the error metrics $E_t$ and $E'_t$ are approximately equivalent. This alignment confirms that short-term predictions are primarily dominated by the temporal continuity of the visual state. However, as the rollout progresses, the counterfactual error $E'_t$ diverges sharply, accumulating to a terminal value of $\sim 38$, while the concordant error $E_t$ stabilizes significantly lower at $\sim 10$.
 
@@ -55,6 +62,7 @@ This divergence is further characterized by the Task Sensitivity Index $\beta$ i
 
 
 \section{Latent Manifold Analysis}
+\label{sec:results_manifold}
 
 The structural properties of the latent manifold and the task-conditioned dynamics of the predictor $h_\theta$ are characterized via a PCA projection in \cref{fig:latent_manifold}. The gray point cloud represents the support of the latent space $\mathbb{R}^d$ as regularized by the SIGReg objective. Starting from the initial state $\mathbf{e}_0$, both the concordant rollout $\hat{\mathbf{e}}_{1:K}$ and the counterfactual rollout $\hat{\mathbf{e}}'_{1:K}$ remain within the high-density regions of the manifold, suggesting that the model respects the learned data distribution.
 

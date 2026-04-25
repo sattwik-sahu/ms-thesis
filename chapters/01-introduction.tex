@@ -1,7 +1,10 @@
 \chapter{Introduction}
 \label{sec:introduction}
 
+This chapter introduces the context and primary objectives of this thesis. Building general-purpose robots requires systems that can translate natural language instructions into concrete, physical actions. Latent predictive control has emerged as a highly efficient way to achieve this, but it currently faces two major hurdles for real-world deployment. First, it relies on having an explicit visual image of the goal at runtime. Second, its internal reasoning acts as an uninterpretable ``black box,'' making it difficult for humans to verify what the robot is thinking. To set the stage for how we tackle these challenges, this chapter first explains the motivation behind developing a language-guided, energy-based predictive model. It then clearly defines the problem being solved, outlines the key contributions of this work, and concludes with a brief roadmap for the rest of the thesis.
+
 \section{Motivation}
+\label{sec:intro_motivation}
 
 The quest for Autonomous Machine Intelligence (AMI) in robotics is largely driven by the desire to build agents capable of understanding high-level human instructions and executing them in complex, unstructured environments~\cite{lecun2022path}. Traditionally, reinforcement learning (RL) has tackled robotic control through model-free paradigms, mapping high-dimensional visual observations directly to motor actions~\cite{nair2018visual}. However, these approaches are notoriously sample-inefficient and struggle with generalization, as they merely memorize reactive behaviors rather than understanding the underlying physics of the environment.
 
@@ -10,6 +13,7 @@ To address these limitations, the field has increasingly pivoted toward Model-Ba
 By leveraging Model Predictive Control (MPC) on top of these latent world models, agents can optimize action trajectories at runtime. This optimization-based approach offers two distinct advantages over reactive policies: first, it allows the system to allocate more computational resources to difficult maneuvers and less to trivial ones; second, by continuously re-planning in a closed loop, the agent gains strong dynamic adaptation capabilities, correcting for environmental stochasticity and unexpected disturbances on the fly.
 
 \section{Problem Statement}
+\label{sec:intro_prob_stmt}
 
 Despite the success of latent MPC frameworks, a fundamental limitation restricts their deployment in general-purpose, language-guided robotics. Current goal-conditioned predictive control methods fundamentally require a latent representation of the target goal at inference time to formulate the optimization cost function. In practical deployment scenarios, however, a user simply provides a high-level linguistic instruction (e.g., ``Pick up the red cube''); the agent is not provided with an explicit visual image or latent vector of the future success state.
 
@@ -22,15 +26,16 @@ Furthermore, beyond optimal control, the deployment of autonomous robots in huma
 Finally, predicting sequential futures in a joint-embedding architecture introduces a severe risk of \textit{latent collapse}—a failure mode where the encoder maps all observations to a constant vector to trivially minimize prediction error. While techniques to solve latent collapse exist in self-supervised learning, they must be carefully integrated into the autoregressive predictive framework without destroying the temporal coherence of the rolled-out trajectories. Therefore, the core problem is to build a language-conditioned latent trajectory generator that maintains a non-degenerate, information-rich manifold suitable for both robust downstream control and human-verifiable intent.
 
 \section{Contributions}
+\label{intro_contribution}
 
 This thesis addresses the aforementioned challenges by formulating and evaluating a generative framework for task-conditioned latent predictive modeling. By treating the transition dynamics as an Energy-Based Model (EBM), we provide a principled approach to evaluating the compatibility of state trajectories with language instructions. The primary contributions of this work are as follows:
 
 \begin{enumerate}
-	\item \textbf{Formulation of a Task-Conditioned Latent EBM:} We design a predictive architecture that fuses high-dimensional visual observations (via Vision Transformers) and semantic task descriptions (via PEFT-adapted CLIP encoders) into a shared latent manifold. This model serves as a forward dynamics engine capable of autoregressively generating reference trajectories without requiring visual goal states at inference time.
+	\item \textbf{Formulation of a Task-Conditioned Latent EBM:} We design a predictive architecture that fuses high-dimensional visual observations (via Vision Transformers) and semantic task descriptions (via PEFT-adapted CLIP encoders) into a latent manifold. This model serves as a forward dynamics engine capable of autoregressively generating reference trajectories without requiring visual goal states at inference time.
 
 	\item \textbf{Integration of Information-Theoretic Regularization for Sequential Rollouts:} To make the generated latent trajectories viable for downstream MPC tracking, we integrate Sketched Isotropic Gaussian Regularization (SIGReg)~\cite{lejepa} with a multi-step rollout loss. We demonstrate that this combination provably mitigates latent collapse while enforcing long-horizon physical coherence.
 
-	\item \textbf{Visualizing Latent Intent for Trustworthy Robotics:} To break the "black-box" nature of latent planning, we train a convolutional decoder that maps the latent manifold back to pixel space. This allows human operators to visually decode the autoregressive rollouts, providing a human-interpretable window into the robot's ``imagination.'' This mechanism serves as a foundation for transparent, explainable robotic control where intent can be verified prior to physical execution.
+	\item \textbf{Visualizing Latent Intent for Trustworthy Robotics:} To break the \textit{black-box} nature of latent planning, we train a convolutional decoder that maps the latent manifold back to pixel space. This allows human operators to visually decode the autoregressive rollouts, providing a human-interpretable window into the robot's ``imagination.'' This mechanism serves as a foundation for transparent, explainable robotic control where intent can be verified prior to physical execution.
 
 	\item \textbf{Empirical Validation of Task Sensitivity:} We provide quantitative and qualitative analyses demonstrating the model's discriminative grounding of language. Through the formulation of a Task Sensitivity Index and PCA-based manifold visualizations, we show that the model successfully synthesizes divergent, causally-correct latent trajectories based purely on differing counterfactual linguistic instructions.
 \end{enumerate}
