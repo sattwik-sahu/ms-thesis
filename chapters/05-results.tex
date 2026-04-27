@@ -20,7 +20,7 @@ The training convergence of the EBM is illustrated in \cref{fig:training_loss_cu
 \section{Qualitative Analysis of Latent Rollouts}
 \label{sec:results_qual}
 
-The video in \cref{fig:qual_vis} demonstrates that the model has successfully learnt the task-conditioned visual dynamics of the environment. It has avoided marginalizing the task and reasons different trajectories in the latent space for different tasks. Moreover, fine-grained movements of the robotic arm are captured in the reconstructed video and latent decodings, which indicates efficient use the of relatively low-dimensional latent space to capture information of minute details in the environment.
+The video in \cref{fig:qual_vis} demonstrates that the model has successfully learnt the task-conditioned visual dynamics of the environment. It has avoided marginalizing the task and reasons different trajectories in the latent space for different tasks. Moreover, fine-grained movements of the robotic arm are captured in the reconstructed video and latent decodings, which indicates efficient use the of relatively low-dimensional latent space to capture information of minute details in the environment. The video can be viewed on \href{https://drive.google.com/file/d/1ZuT-oqbI2NSsL0L4fgpC3Mk3P9W9AUde/view?usp=drive_link}{this link}.
 
 \begin{figure}
 	\begin{center}
@@ -30,11 +30,11 @@ The video in \cref{fig:qual_vis} demonstrates that the model has successfully le
 		\end{subfigure}
 		\hfill
 		\begin{subfigure}{0.45\textwidth}
-			\includegraphics[width=\textwidth]{figures/results/results-video_qr.pdf}
+			\includegraphics[width=\textwidth]{figures/results/success-decoded-qr.png}
 			\caption{}
 		\end{subfigure}
 	\end{center}
-	\caption{\textbf{Qualitative Visualization of Latent Reasoning.}\ (a) A frame from the video syncing together the ground truth video, the reconstructed frames from \cref{eq:reconst_obs}, decoded latent rollouts from \cref{eq:open_ro_correct} and \cref{eq:open_ro_wrong}, (b) QR code to view the video on Google Drive}
+	\caption{\textbf{Qualitative Visualization of Latent Reasoning.}\ (a) A frame from the video syncing together the ground truth video, the reconstructed frames from \cref{eq:reconst_obs}, decoded latent rollouts from \cref{eq:open_ro_correct} and \cref{eq:open_ro_wrong}, (b) QR code to \href{https://drive.google.com/file/d/1ZuT-oqbI2NSsL0L4fgpC3Mk3P9W9AUde/view?usp=drive_link}{view the video on Google Drive}}
 	\label{fig:qual_vis}
 \end{figure}
 

@@ -68,6 +68,7 @@
 \newcommand{\thesisdate}[1]{\gdef\mythesisdate{#1}}
 \newcommand{\degreename}[1]{\gdef\mydegreename{#1}}
 \newcommand{\departmentname}[1]{\gdef\mydepartmentname{#1}}
+\newcommand{\titlemargin}{1.5in}
 
 \thesistitle{Thesis Title}
 \studentname{Student Name}
@@ -84,45 +85,51 @@
 % --- 7. Title Page ---
 \renewcommand{\maketitle}{
 	\begin{titlepage}
+		\newgeometry{margin=\titlemargin}
 		\begin{center}
-			\setstretch{1.3}
-			\textbf{\Large \mythesistitle} \\
-			\vspace{1cm}
-			\large{\textit{A report submitted in partial fulfillment of the requirements \\
-					for the award of the degree of}} \\
-			\vspace{0.5cm}
-			\large{\textbf{\mydegreename}} \\
-			\normalsize{\textit{in}}\\
-			\large{\textbf{\mysubject}} \\[0.5cm]
-			\normalsize{by} \\
-			\large{\textbf{\MakeUppercase{\mystudentname}}} \\
-			\normalsize{\textbf{\mystudentrollno}} \\[0.5cm]
-			\normalsize{\textit{under the guidance of}} \\
-			\large{\MakeUppercase{\textbf{\mysupervisorname}}}
+			\setstretch{1.2}
+			\textbf{\Large \MakeUppercase{\mythesistitle}} \\
 			\vfill
-			\centerline{\includegraphics[width=4.6cm]{figures/iiserb/logo.png}}
-			\vspace{0.5cm}
-			\textbf{\normalsize \MakeUppercase{\mydepartmentname} \\
-				INDIAN INSTITUTE OF SCIENCE EDUCATION AND RESEARCH BHOPAL} \\
-			\normalsize{\MakeUppercase{Bhopal -- 462 066}} \\
-			\vspace{0.5cm}
-			\textbf{\mythesisdate}
+			\large{\textbf{A THESIS}} \\[0.5em]
+			\large{\textit{submitted in partial fulfillment of the requirements \\
+					for the award of the dual degree of}} \\[3em]
+			\large{\textbf{\mydegreename}} \\[0.5em]
+			\normalsize{\textit{in}}\\[0.5em]
+			\large{\MakeUppercase{\textbf{\mysubject}}} \\[0.5em]
+			\normalsize{\textit{by}} \\[0.5em]
+			\large{\textbf{\MakeUppercase{\mystudentname}}} \\[0.5em]
+			\large{\textbf{(\mystudentrollno)}} \\[3em]
+			% \normalsize{\textit{under the guidance of}} \\
+			% \large{\MakeUppercase{\textbf{\mysupervisorname}}}
+			% \vfill
+			\centerline{\includegraphics[width=2.5cm]{figures/iiserb/logo.png}}
+			\vspace{0.5em}
+			\textbf{\normalsize
+				\MakeUppercase{\mydepartmentname} \\
+				INDIAN INSTITUTE OF SCIENCE EDUCATION AND RESEARCH BHOPAL \\
+				BHOPAL -- 462 066
+			} \\[1em]
+			\large{\textbf{\mythesisdate}}
 		\end{center}
 	\end{titlepage}
 }
 
 % --- 8. Environments ---
 \renewenvironment{abstract}{
-	\cleardoublepage{}
-	\chapter*{ABSTRACT}
+	\cleardoublepage
+	\begingroup
+	\chapter*{\vspace*{-3em}ABSTRACT}
+	\thispagestyle{fancy}
 	\addcontentsline{toc}{chapter}{Abstract}
-}{}
+}{
+	\endgroup
+}
 
 \newenvironment{certificate}{
 	\cleardoublepage{}
 	\thispagestyle{firstpage}
-	\vspace*{1.5cm}
-	\begin{center} \large\bfseries CERTIFICATE \end{center}
+	\vspace*{1.5em}
+	\begin{center} \LARGE\bfseries CERTIFICATE \end{center}
 	\addcontentsline{toc}{chapter}{Certificate}
 	\vspace{0.5cm}
 }{}
@@ -135,12 +142,25 @@
 
 \pagestyle{fancy}
 \fancyhf{}
-\fancyhead[L]{\slshape \leftmark}
-\fancyhead[R]{\thepage}
+
+\renewcommand{\chaptermark}[1]{%
+	\markboth{\thechapter.\ #1}{}%
+}
+
+\fancyhead[C]{\bfseries \leftmark}
+\fancyhead[R]{\textbf{\thepage}}
+
 \renewcommand{\headrulewidth}{0.4pt}
+
+\newcommand{\insertEmptyPage}{
+	\clearpage
+	\thispagestyle{empty}
+	\mbox{}
+	\clearpage
+}
 
 \RequirePackage{hyperref}
 \RequirePackage{bookmark}
-\hypersetup{colorlinks=true, linkcolor=black, citecolor=blue, urlcolor=black}
+\hypersetup{colorlinks=true, linkcolor=black, citecolor=Blue, urlcolor=Blue}
 \RequirePackage[capitalize]{cleveref}
 
