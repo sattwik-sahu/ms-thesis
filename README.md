@@ -1,28 +1,45 @@
-# IISERB-BS Thesis/Project Report Template
-BS Thesis/Project Report template for IISER Bhopal (India)
+# MS Thesis LaTeX Template - IISER Bhopal
 
---------------------INTRODUCTION--------------------------------------
+This repository provides a professional and modular LaTeX template for writing an MS Thesis, specifically formatted to meet the requirements of the **Indian Institute of Science Education and Research (IISER) Bhopal**.
 
-This is the format for IISER Bhopal BS Thesis/Project Report for the EECS department. 
+---
 
-This is a work of Aditya Mishra (21013), which is a modified version of the one originally prepared by Arghya Chattopadhyay. Huge shout out to Arghya for all the hard work!
+## 🚀 Getting Started on Overleaf
 
-The formatting related contents (packages, custom layout, fonts, etc.) are now part of the IISERB.cls class file, which also contains the title page layout. 
+The easiest way to use this template is via [Overleaf](https://www.overleaf.com/). Follow these steps to get started:
 
-All you have to do is enter your details in the individual details section in thesis.tex and edit included files. 
+1.  **Download the Template**: Download this repository as a `.zip` file (Click **Code** > **Download ZIP**).
+2.  **Upload to Overleaf**: 
+    * Log in to Overleaf and click **New Project** > **Upload Project**.
+    * Select the `.zip` file you just downloaded.
+3.  **Set the Main Document**: 
+    * In the left sidebar, locate `main.tex`. 
+    * If it is not already selected as the main file, click on it, and Overleaf should automatically recognize it. Alternatively, click the **Menu** icon (top left) and ensure the "Main document" is set to `main.tex`.
+4.  **Configure Compiler**:
+    * In the **Menu**, make sure the "Compiler" is set to **pdfLaTeX**.
+5.  **Compile**: Click the green **Recompile** button. Your thesis PDF should appear on the right!
 
-This version:
+---
 
-Created by: Aditya Mishra
+## 🛠️ How to Customize Your Thesis
 
-contact: adityam0003@gmail.com
+### 1. Update Your Information
 
-Date created: April 02, 2025
+The template uses a central configuration file for all your personal details. Open **`meta/_info.tex`** and update the following commands with your information:
 
-Remarks: Final version, conforms to academic office requirements.
+```latex
+\thesistitle{Your Thesis Title}
+\studentname{Your Name}
+\studentrollno{Roll Number}
+\subject{Your Department Name}
+\supervisorname{Dr. Supervisor Name}
+\supervisordesig{Professor / Associate Professor}
 
-Bibliography style file hunsrt.bst is also in the styles folder.
-
-The "misc" directory contains all the .sty and other miscellaneous files. All the images and logos have been placed in the "images" directory.
-
-===================================END========================================
+% Update your thesis review committee members here
+\setcommittee{
+	First Member Name,
+	Second Member Name,
+	Third Member Name,
+	Fourth Member Name,
+}
+```
