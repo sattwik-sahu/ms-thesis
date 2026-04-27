@@ -125,6 +125,33 @@
 	\endgroup
 }
 
+% Committee table utility
+\ExplSyntaxOn
+
+\seq_new:N \g_committee_seq
+
+% set the committee list (comma-separated)
+\NewDocumentCommand{\setcommittee}{m}
+{
+	\seq_set_from_clist:Nn \g_committee_seq {#1}
+}
+
+% print the table
+\NewDocumentCommand{\printcommittee}{}
+{
+	\begin{center}
+		\begin{tabular}{lcc}
+			\textbf{Committee Member} & \textbf{Signature} & \textbf{Date}     \\[1.8em]
+			\seq_map_inline:Nn \g_committee_seq
+			{
+			##1                       & \rule{12em}{0.5pt} & \rule{6em}{0.5pt} \\[1.8em]
+			}
+		\end{tabular}
+	\end{center}
+}
+
+\ExplSyntaxOff
+
 \newenvironment{certificate}{
 	\cleardoublepage{}
 	\thispagestyle{firstpage}
