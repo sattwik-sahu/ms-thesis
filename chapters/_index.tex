@@ -1,6 +1,31 @@
-\input{chapters/01-introduction}
-\input{chapters/02-background}
-\input{chapters/03-methodology}
-\input{chapters/04-experiments}
-\input{chapters/05-results}
-\input{chapters/06-conclusion}
+\chapter{First Chapter}
+\label{sec:chapter_1}
+
+This is the first chapter. You may add nomenclatures as shown here, following the DRY principle.
+
+\nomenclature{DRY}{Don't Repeat yourself}
+
+\section{First Section}
+\label{sec:chapter_1-1}
+
+This is the first section. You may cite papers as such~\cite{Newton:1687eqk}.
+
+\section{Second Section}
+\label{sec:chapter_1-2}
+
+This is another section. Here we refer to the equation
+\begin{equation}
+	E = mc^2 ,
+	\label{eq:my-formula}
+\end{equation}
+where we can also define the symbols in \cref{eq:my-formula} in the nomenclature as shown below.
+
+\nomenclature{$E$}{Energy}
+\nomenclature{$m$}{Mass}
+\nomenclature{$c$}{Speed of light}
+
+\chapter{Second Chapter}
+\label{sec:chapter_2}
+
+This is another chapter. You may reference an earlier section, \textit{e.g.}, ``as mentioned in \cref{sec:chapter_1} and \cref{sec:chapter_1-2}, ...''
+
