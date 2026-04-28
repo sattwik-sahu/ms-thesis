@@ -39,7 +39,7 @@
 \RequirePackage{datetime}
 
 % Nomenclature styling
-\renewcommand{\nomname}{List of Symbols and Abbreviations}
+\renewcommand{\nomname}{List of Symbols or Abbreviations}
 \setlength{\nomlabelwidth}{7em}
 
 % TikZ for diagrams
@@ -163,7 +163,7 @@
 
 \fancypagestyle{firstpage}{
 	\fancyhf{}
-	\fancyhead[C]{\includegraphics[width=\linewidth]{figures/iiserb/letterhead.png}}
+	\fancyhead[C]{\includegraphics[width=\linewidth]{figures/iiserb/letterhead-eecs.png}}
 	\renewcommand{\headrulewidth}{0pt}
 }
 
