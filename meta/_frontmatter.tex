@@ -2,19 +2,28 @@
 	\input{meta/certificate.tex}
 \end{certificate}
 
+\cleardoublepage{}
+\addcontentsline{toc}{chapter}{Academic Integrity and Copyright Disclaimer}
 \include{meta/disclaimer}
+
+\addcontentsline{toc}{chapter}{Acknowledgement}
 \include{meta/acknwldg}
 
 \begin{abstract}
 	\input{meta/abstract.tex}
 \end{abstract}
 
-\listoffigures
-\listoftables
-
 \cleardoublepage{}
 \input{meta/symbols.tex}
 \printnomenclature{}
+
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
 
 \tableofcontents
 
