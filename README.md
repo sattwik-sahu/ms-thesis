@@ -1,8 +1,11 @@
 # MS Thesis Latex Source
 
 **Name:** Sattwik Kumar Sahu
+
 **Roll No.:** `21241`
+
 **Department:** Electrical Engineering and Computer Science
+
 **Supervisor:** Prof. Sujit P B
 
 ---
