@@ -1,0 +1,30 @@
+name: Release Thesis PDF
+
+on:
+  push:
+    tags:
+      - "v"
+
+permissions:
+  contents: write
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+
+      - name: Rename PDF
+        run: mv thesis.pdf IISERB-MS-Thesis-Template.pdf
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+            files: IISERB-MS-Thesis-Template.pdf
+
