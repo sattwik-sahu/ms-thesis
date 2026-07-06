@@ -2,7 +2,6 @@ name: Build Thesis
 
 on:
   push:
-  pull_request:
     paths:
       - '**.tex'
       - '**.bib'
