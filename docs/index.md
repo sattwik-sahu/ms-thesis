@@ -18,7 +18,7 @@ Welcome! This is the documentation for the **IISER Bhopal MS Thesis LaTeX templa
 
 Given below is a sample PDF generated using the tutorial that this documentation provides. The generated PDF is in accordance with the requirements specified by the Office of Academic Affairs, IISER Bhopal.
 
-![Sample PDF](./sample.pdf){ type=application/pdf style="min-height:25vh;width:100%" }
+![Sample PDF](./sample.pdf){ type=application/pdf style="min-height:60vh;width:100%" }
 
 ## How the documentation is organized
 
