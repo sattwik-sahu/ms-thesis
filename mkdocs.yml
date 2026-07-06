@@ -1,0 +1,58 @@
+site_name: IISERB MS Thesis Template
+repo_url: https://github.com/sattwik-sahu/ms-thesis
+repo_name: sattwik-sahu/ms-thesis
+
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - content.tabs.link
+    - toc.follow
+  palette:
+    - scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.arithmatex:
+      generic: true
+  - attr_list
+  - toc:
+      permalink: true
+
+plugins:
+  - mkdocs-pdf
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Using on Overleaf: getting-started/overleaf.md
+      - Local Setup: getting-started/local-setup.md
+  - Writing Your Thesis:
+      - Metadata: writing-your-thesis/metadata.md
+      - Frontmatter: writing-your-thesis/frontmatter.md
+      - Chapters: writing-your-thesis/chapters.md
+      - Citations: writing-your-thesis/citations.md
+      - Cross-Referencing: writing-your-thesis/cross-referencing.md
+      - Nomenclature: writing-your-thesis/nomenclature.md
+  - Reference:
+      - Directory Structure: reference/directory-structure.md
+      - Class Options: reference/class-options.md
+  - Troubleshooting: troubleshooting.md
+  - FAQ: faq.md
